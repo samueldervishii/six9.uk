@@ -314,24 +314,49 @@
                     },
                 ];
 
+                // shuffle questions + their options on each playthrough
+                function shuffle(a) {
+                    for (let i = a.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [a[i], a[j]] = [a[j], a[i]];
+                    }
+                    return a;
+                }
+                function buildDeck() {
+                    return shuffle(QUESTIONS.slice()).map((item) => {
+                        const opts = item.opts.map((text, idx) => ({
+                            text,
+                            correct: idx === item.a,
+                        }));
+                        shuffle(opts);
+                        return {
+                            q: item.q,
+                            why: item.why,
+                            opts: opts.map((o) => o.text),
+                            a: opts.findIndex((o) => o.correct),
+                        };
+                    });
+                }
+
                 const card = document.getElementById("card");
+                let DECK = buildDeck();
                 let qi = 0,
                     score = 0;
 
                 function renderQuestion() {
-                    const item = QUESTIONS[qi];
+                    const item = DECK[qi];
                     card.innerHTML =
                         '<div class="kicker">☕ pop quiz</div>' +
                         "<h1>Know your Java?</h1>" +
                         '<div class="meta">Question ' +
                         (qi + 1) +
                         " / " +
-                        QUESTIONS.length +
+                        DECK.length +
                         " · score " +
                         score +
                         "</div>" +
                         '<div class="qbar"><i style="width:' +
-                        (qi / QUESTIONS.length) * 100 +
+                        (qi / DECK.length) * 100 +
                         '%"></i></div>' +
                         '<div class="question">' +
                         item.q +
@@ -350,7 +375,7 @@
                         "</div>" +
                         '<div class="explain" id="explain"></div>' +
                         '<div class="row"><button class="btn" type="button" id="next">' +
-                        (qi < QUESTIONS.length - 1
+                        (qi < DECK.length - 1
                             ? "Next →"
                             : "See result →") +
                         "</button></div>";
@@ -383,11 +408,11 @@
                         "Question " +
                         (qi + 1) +
                         " / " +
-                        QUESTIONS.length +
+                        DECK.length +
                         " · score " +
                         score;
                     card.querySelector(".qbar > i").style.width =
-                        ((qi + 1) / QUESTIONS.length) * 100 + "%";
+                        ((qi + 1) / DECK.length) * 100 + "%";
 
                     const next = card.querySelector("#next");
                     next.classList.add("show");
@@ -395,7 +420,7 @@
                         "click",
                         () => {
                             qi++;
-                            if (qi < QUESTIONS.length) renderQuestion();
+                            if (qi < DECK.length) renderQuestion();
                             else renderResult();
                         },
                         { once: true },
@@ -403,7 +428,7 @@
                 }
 
                 function renderResult() {
-                    const total = QUESTIONS.length;
+                    const total = DECK.length;
                     const pct = score / total;
                     let tier, msg;
                     if (pct === 1) {
@@ -435,15 +460,42 @@
                         "</p>" +
                         '<div class="actions">' +
                         '<button class="btn" type="button" id="again">Play again</button>' +
-                        '<a class="btn ghost" href="/">← back to the story</a>' +
+                        '<button class="btn ghost" type="button" id="share">Share result</button>' +
+                        '<a class="btn ghost" href="/">← the story</a>' +
                         "</div></div>";
                     card
                         .querySelector("#again")
                         .addEventListener("click", () => {
+                            DECK = buildDeck();
                             qi = 0;
                             score = 0;
                             renderQuestion();
                         });
+                    const shareBtn = card.querySelector("#share");
+                    shareBtn.addEventListener("click", async () => {
+                        const text =
+                            "I scored " +
+                            score +
+                            "/" +
+                            total +
+                            " on the Java history quiz ☕";
+                        if (navigator.share) {
+                            try {
+                                await navigator.share({ text });
+                                return;
+                            } catch (e) {
+                                if (e && e.name === "AbortError") return;
+                            }
+                        }
+                        try {
+                            await navigator.clipboard.writeText(text);
+                        } catch (e) {}
+                        shareBtn.textContent = "Copied ✓";
+                        setTimeout(
+                            () => (shareBtn.textContent = "Share result"),
+                            1800,
+                        );
+                    });
                 }
 
                 renderQuestion();

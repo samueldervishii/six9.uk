@@ -694,6 +694,19 @@
                 color: var(--coffee-2);
                 animation: caret 1s step-end infinite;
             }
+            .evolve-code .c-kw {
+                color: var(--coffee-2);
+            }
+            .evolve-code .c-type {
+                color: var(--crema);
+            }
+            .evolve-code .c-str {
+                color: #b6c98a;
+            }
+            .evolve-code .c-com {
+                color: #8a7a66;
+                font-style: italic;
+            }
             @media (max-width: 560px) {
                 .evolve-code code {
                     font-size: 12.5px;
@@ -1267,6 +1280,25 @@
                     autoTimer = null,
                     autoStopped = false;
 
+                // lightweight Java syntax highlighter (static input, safe)
+                function highlight(code) {
+                    const esc = code
+                        .replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;");
+                    return esc.replace(
+                        /(\/\/[^\n]*)|("[^"]*")|\b([A-Z]\w*)\b|\b(public|private|protected|class|static|void|new|for|if|else|return|import|final|var|int|boolean)\b/g,
+                        (m, com, str, type, kw) => {
+                            if (com) return '<span class="c-com">' + com + "</span>";
+                            if (str) return '<span class="c-str">' + str + "</span>";
+                            if (type)
+                                return '<span class="c-type">' + type + "</span>";
+                            if (kw) return '<span class="c-kw">' + kw + "</span>";
+                            return m;
+                        },
+                    );
+                }
+
                 function showSnippet(i, typed) {
                     const snip = SNIPPETS[i];
                     if (!snip || !evolveCode) return;
@@ -1278,7 +1310,7 @@
                     clearTimeout(evolveTimer);
                     if (reduce || !typed) {
                         evolveCode.classList.remove("typing");
-                        evolveCode.textContent = snip.code;
+                        evolveCode.innerHTML = highlight(snip.code);
                         return;
                     }
                     evolveCode.classList.add("typing");
@@ -1288,7 +1320,10 @@
                         evolveCode.textContent = snip.code.slice(0, c);
                         if (c++ < snip.code.length)
                             evolveTimer = setTimeout(step, 12);
-                        else evolveCode.classList.remove("typing");
+                        else {
+                            evolveCode.classList.remove("typing");
+                            evolveCode.innerHTML = highlight(snip.code);
+                        }
                     })();
                 }
 
