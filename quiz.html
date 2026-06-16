@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Quiz — How well do you know Java? ☕</title>
+        <meta
+            name="description"
+            content="A quick coffee-break quiz on Java history and features — from Oak to Java 26."
+        />
+        <meta name="theme-color" content="#0c0a09" />
+        <link rel="icon" type="image/svg+xml" href="/assets/duke.svg" />
+        <style>
+            :root {
+                --bg: #0c0a09;
+                --ink: #f4ece2;
+                --muted: #a89a88;
+                --coffee: #c8804a;
+                --coffee-2: #e0a86b;
+                --crema: #f0c894;
+                --line: rgba(200, 128, 74, 0.35);
+                --ok: #6fbf73;
+                --no: #d2776c;
+                --serif:
+                    "Iowan Old Style", "Palatino Linotype", Palatino, Georgia,
+                    serif;
+                --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+            }
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                background: var(--bg);
+                color: var(--ink);
+                font-family: var(--serif);
+                line-height: 1.6;
+                -webkit-font-smoothing: antialiased;
+                min-height: 100vh;
+                display: grid;
+                place-items: center;
+                padding: 80px 24px 60px;
+            }
+            .back {
+                position: fixed;
+                top: 20px;
+                left: 22px;
+                z-index: 10;
+                font-family: var(--mono);
+                font-size: 12px;
+                letter-spacing: 1px;
+                color: var(--muted);
+                text-decoration: none;
+                border: 1px solid var(--line);
+                padding: 7px 14px;
+                border-radius: 999px;
+                background: rgba(28, 20, 16, 0.4);
+                transition: 0.25s;
+            }
+            .back:hover {
+                color: var(--crema);
+                border-color: var(--coffee);
+            }
+            .card {
+                max-width: 620px;
+                width: 100%;
+            }
+            .kicker {
+                font-family: var(--mono);
+                font-size: 12px;
+                letter-spacing: 4px;
+                text-transform: uppercase;
+                color: var(--coffee-2);
+                text-align: center;
+            }
+            h1 {
+                text-align: center;
+                font-size: clamp(30px, 7vw, 52px);
+                font-weight: 600;
+                letter-spacing: -0.01em;
+                margin: 10px 0 26px;
+            }
+            .meta {
+                font-family: var(--mono);
+                font-size: 12px;
+                letter-spacing: 1px;
+                color: var(--muted);
+                text-align: center;
+                margin-bottom: 14px;
+            }
+            .qbar {
+                height: 4px;
+                background: rgba(200, 128, 74, 0.18);
+                border-radius: 2px;
+                overflow: hidden;
+                margin-bottom: 28px;
+            }
+            .qbar > i {
+                display: block;
+                height: 100%;
+                width: 0;
+                background: linear-gradient(90deg, var(--coffee), var(--crema));
+                transition: width 0.4s ease;
+            }
+            .question {
+                font-size: clamp(20px, 4vw, 27px);
+                font-weight: 600;
+                margin-bottom: 22px;
+            }
+            .opts {
+                display: grid;
+                gap: 12px;
+            }
+            .opt {
+                font-family: var(--serif);
+                font-size: 17px;
+                text-align: left;
+                color: var(--ink);
+                background: rgba(255, 255, 255, 0.02);
+                border: 1px solid var(--line);
+                border-radius: 12px;
+                padding: 14px 18px;
+                cursor: pointer;
+                transition:
+                    border-color 0.2s,
+                    background 0.2s,
+                    transform 0.1s;
+            }
+            .opt:hover:not(:disabled) {
+                border-color: var(--coffee);
+                background: rgba(200, 128, 74, 0.08);
+            }
+            .opt:active:not(:disabled) {
+                transform: scale(0.99);
+            }
+            .opt:disabled {
+                cursor: default;
+            }
+            .opt.correct {
+                border-color: var(--ok);
+                background: rgba(111, 191, 115, 0.14);
+            }
+            .opt.wrong {
+                border-color: var(--no);
+                background: rgba(210, 119, 108, 0.14);
+            }
+            .explain {
+                margin-top: 18px;
+                font-family: var(--mono);
+                font-size: 13px;
+                color: var(--muted);
+                line-height: 1.75;
+                opacity: 0;
+                transform: translateY(6px);
+                transition:
+                    opacity 0.3s ease,
+                    transform 0.3s ease;
+            }
+            .explain.show {
+                opacity: 1;
+                transform: none;
+            }
+            .row {
+                margin-top: 24px;
+                display: flex;
+                justify-content: flex-end;
+            }
+            .btn {
+                font-family: var(--mono);
+                font-size: 13px;
+                letter-spacing: 1px;
+                color: #1c1410;
+                background: var(--crema);
+                border: none;
+                border-radius: 999px;
+                padding: 11px 22px;
+                cursor: pointer;
+                text-decoration: none;
+                display: inline-block;
+                transition: 0.2s;
+            }
+            .btn:hover {
+                background: var(--coffee-2);
+            }
+            .btn.ghost {
+                background: transparent;
+                border: 1px solid var(--line);
+                color: var(--crema);
+            }
+            .btn.ghost:hover {
+                background: rgba(200, 128, 74, 0.08);
+                border-color: var(--coffee);
+            }
+            .row .btn {
+                opacity: 0;
+                pointer-events: none;
+                transition:
+                    opacity 0.3s ease,
+                    background 0.2s ease;
+            }
+            .row .btn.show {
+                opacity: 1;
+                pointer-events: auto;
+            }
+            /* result */
+            .result {
+                text-align: center;
+            }
+            .score {
+                font-family: var(--serif);
+                font-weight: 600;
+                line-height: 1;
+                font-size: clamp(64px, 14vw, 104px);
+                background: linear-gradient(180deg, var(--crema), var(--coffee));
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+            }
+            .score small {
+                font-size: 0.38em;
+                -webkit-text-fill-color: var(--muted);
+                color: var(--muted);
+            }
+            .tier {
+                font-size: clamp(22px, 5vw, 34px);
+                font-weight: 600;
+                margin: 16px 0 8px;
+            }
+            .result p {
+                color: var(--muted);
+                font-family: var(--mono);
+                font-size: 13px;
+                margin-bottom: 30px;
+            }
+            .actions {
+                display: flex;
+                gap: 12px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            @media (prefers-reduced-motion: reduce) {
+                * {
+                    transition: none !important;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <a class="back" href="/">← the story</a>
+        <main class="card" id="card"></main>
+
+        <script>
+            (() => {
+                "use strict";
+                const QUESTIONS = [
+                    {
+                        q: "What was Java originally named?",
+                        opts: ["Oak", "Mocha", "Green", "Pulsar"],
+                        a: 0,
+                        why: "James Gosling named it “Oak” after a tree outside his office — renamed once “Oak” turned out to be trademarked.",
+                    },
+                    {
+                        q: "In what year was Java publicly released?",
+                        opts: ["1991", "1995", "1996", "2000"],
+                        a: 1,
+                        why: "Java went public on May 23, 1995. (1991 was the Green Project; the JDK 1.0 download arrived in 1996.)",
+                    },
+                    {
+                        q: "Who led the team that created Java?",
+                        opts: [
+                            "Linus Torvalds",
+                            "Guido van Rossum",
+                            "James Gosling",
+                            "Brendan Eich",
+                        ],
+                        a: 2,
+                        why: "James Gosling is widely known as the father of Java.",
+                    },
+                    {
+                        q: "Where does the name “Java” come from?",
+                        opts: [
+                            "A founder’s initials",
+                            "A type of coffee",
+                            "An acronym",
+                            "A mountain range",
+                        ],
+                        a: 1,
+                        why: "It’s named after Java coffee — which is why there’s a cup, a ☕, and Duke everywhere.",
+                    },
+                    {
+                        q: "Which release brought lambdas and the Streams API?",
+                        opts: ["Java 5", "Java 7", "Java 8", "Java 11"],
+                        a: 2,
+                        why: "Java 8 (2014) added lambdas, streams, Optional and a new date/time API — the release everyone remembers.",
+                    },
+                    {
+                        q: "Which version made virtual threads a reality?",
+                        opts: ["Java 17", "Java 19", "Java 21", "Java 25"],
+                        a: 2,
+                        why: "Project Loom’s virtual threads were finalized in Java 21 (2023).",
+                    },
+                    {
+                        q: "What is Java’s mascot called?",
+                        opts: ["Tux", "Duke", "Gopher", "Bean"],
+                        a: 1,
+                        why: "Duke has been Java’s mascot since 1995 — he’s waving at the bottom of the story.",
+                    },
+                    {
+                        q: "As of 2026, what is the latest Java release?",
+                        opts: ["Java 23", "Java 25", "Java 26", "Java 30"],
+                        a: 2,
+                        why: "Java 26 landed in March 2026; Java 25 (2025) was the most recent LTS.",
+                    },
+                ];
+
+                const card = document.getElementById("card");
+                let qi = 0,
+                    score = 0;
+
+                function renderQuestion() {
+                    const item = QUESTIONS[qi];
+                    card.innerHTML =
+                        '<div class="kicker">☕ pop quiz</div>' +
+                        "<h1>Know your Java?</h1>" +
+                        '<div class="meta">Question ' +
+                        (qi + 1) +
+                        " / " +
+                        QUESTIONS.length +
+                        " · score " +
+                        score +
+                        "</div>" +
+                        '<div class="qbar"><i style="width:' +
+                        (qi / QUESTIONS.length) * 100 +
+                        '%"></i></div>' +
+                        '<div class="question">' +
+                        item.q +
+                        "</div>" +
+                        '<div class="opts">' +
+                        item.opts
+                            .map(
+                                (o, i) =>
+                                    '<button class="opt" type="button" data-i="' +
+                                    i +
+                                    '">' +
+                                    o +
+                                    "</button>",
+                            )
+                            .join("") +
+                        "</div>" +
+                        '<div class="explain" id="explain"></div>' +
+                        '<div class="row"><button class="btn" type="button" id="next">' +
+                        (qi < QUESTIONS.length - 1
+                            ? "Next →"
+                            : "See result →") +
+                        "</button></div>";
+
+                    const opts = card.querySelectorAll(".opt");
+                    opts.forEach((b) =>
+                        b.addEventListener("click", () =>
+                            answer(b, opts, item),
+                        ),
+                    );
+                }
+
+                function answer(btn, opts, item) {
+                    const chosen = +btn.dataset.i;
+                    opts.forEach((b) => {
+                        b.disabled = true;
+                        const i = +b.dataset.i;
+                        if (i === item.a) b.classList.add("correct");
+                        else if (i === chosen) b.classList.add("wrong");
+                    });
+                    if (chosen === item.a) score++;
+
+                    const ex = card.querySelector("#explain");
+                    ex.textContent =
+                        (chosen === item.a ? "✓ Correct. " : "✗ Not quite. ") +
+                        item.why;
+                    ex.classList.add("show");
+
+                    card.querySelector(".meta").textContent =
+                        "Question " +
+                        (qi + 1) +
+                        " / " +
+                        QUESTIONS.length +
+                        " · score " +
+                        score;
+                    card.querySelector(".qbar > i").style.width =
+                        ((qi + 1) / QUESTIONS.length) * 100 + "%";
+
+                    const next = card.querySelector("#next");
+                    next.classList.add("show");
+                    next.addEventListener(
+                        "click",
+                        () => {
+                            qi++;
+                            if (qi < QUESTIONS.length) renderQuestion();
+                            else renderResult();
+                        },
+                        { once: true },
+                    );
+                }
+
+                function renderResult() {
+                    const total = QUESTIONS.length;
+                    const pct = score / total;
+                    let tier, msg;
+                    if (pct === 1) {
+                        tier = "☕ Espresso-grade.";
+                        msg = "Flawless. You might actually be the JVM.";
+                    } else if (pct >= 0.75) {
+                        tier = "Strong brew.";
+                        msg = "You clearly know your Java history.";
+                    } else if (pct >= 0.5) {
+                        tier = "A decent cup.";
+                        msg = "Solid — one more scroll of the story tops you up.";
+                    } else {
+                        tier = "Needs more caffeine.";
+                        msg = "Give the timeline another read and come back. ☕";
+                    }
+                    card.innerHTML =
+                        '<div class="result">' +
+                        '<div class="kicker">☕ your result</div>' +
+                        '<div class="score">' +
+                        score +
+                        "<small>/" +
+                        total +
+                        "</small></div>" +
+                        '<div class="tier">' +
+                        tier +
+                        "</div>" +
+                        "<p>" +
+                        msg +
+                        "</p>" +
+                        '<div class="actions">' +
+                        '<button class="btn" type="button" id="again">Play again</button>' +
+                        '<a class="btn ghost" href="/">← back to the story</a>' +
+                        "</div></div>";
+                    card
+                        .querySelector("#again")
+                        .addEventListener("click", () => {
+                            qi = 0;
+                            score = 0;
+                            renderQuestion();
+                        });
+                }
+
+                renderQuestion();
+            })();
+        </script>
+    </body>
+</html>

@@ -1,436 +1,1373 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>The History of Java ☕</title>
-<meta name="description" content="A short, animated history of Java: from the Green Project and Oak in 1991 to virtual threads and beyond." />
-<meta name="theme-color" content="#0c0a09" />
-<link rel="icon" type="image/svg+xml" href="/assets/duke.svg" />
-<meta property="og:title" content="The History of Java ☕" />
-<meta property="og:description" content="From 'Oak' in 1991 to Java 25 — scroll through three decades of the language that runs everywhere." />
-<meta property="og:type" content="website" />
-<style>
-  :root{
-    --bg:#0c0a09; --ink:#f4ece2; --muted:#a89a88;
-    --coffee:#c8804a; --coffee-2:#e0a86b; --crema:#f0c894;
-    --line:rgba(200,128,74,.35);
-    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  }
-  *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{
-    background:var(--bg); color:var(--ink); font-family:var(--serif);
-    -webkit-font-smoothing:antialiased; overflow-x:hidden; line-height:1.6;
-  }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>The History of Java ☕</title>
+        <meta
+            name="description"
+            content="A short, animated history of Java: from the Green Project and Oak in 1991 to virtual threads and beyond."
+        />
+        <meta name="theme-color" content="#0c0a09" />
+        <link rel="icon" type="image/svg+xml" href="/assets/duke.svg" />
+        <meta property="og:title" content="The History of Java ☕" />
+        <meta
+            property="og:description"
+            content="From 'Oak' in 1991 to Java 25 — scroll through three decades of the language that runs everywhere."
+        />
+        <meta property="og:type" content="website" />
+        <style>
+            :root {
+                --bg: #0c0a09;
+                --ink: #f4ece2;
+                --muted: #a89a88;
+                --coffee: #c8804a;
+                --coffee-2: #e0a86b;
+                --crema: #f0c894;
+                --line: rgba(200, 128, 74, 0.35);
+                --serif:
+                    "Iowan Old Style", "Palatino Linotype", Palatino, Georgia,
+                    serif;
+                --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+            }
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                background: var(--bg);
+                color: var(--ink);
+                font-family: var(--serif);
+                -webkit-font-smoothing: antialiased;
+                overflow-x: hidden;
+                line-height: 1.6;
+            }
 
-  /* scroll progress bar */
-  .progress{position:fixed; top:0; left:0; height:3px; width:0%;
-    background:linear-gradient(90deg,var(--coffee),var(--crema)); z-index:50; box-shadow:0 0 12px rgba(224,168,107,.6)}
+            /* ---- HERO ---- */
+            .hero {
+                min-height: 100vh;
+                display: grid;
+                place-items: center;
+                text-align: center;
+                position: relative;
+                padding: 24px;
+            }
+            .cup {
+                position: relative;
+                width: 120px;
+                height: 96px;
+                margin: 0 auto 34px;
+            }
+            .cup .body {
+                position: absolute;
+                inset: 18px 8px 0 8px;
+                background: linear-gradient(180deg, #1c1410, #120d0a);
+                border: 2px solid var(--coffee);
+                border-radius: 6px 6px 16px 16px;
+            }
+            .cup .body::after {
+                content: "";
+                position: absolute;
+                inset: 6px 6px auto 6px;
+                height: 10px;
+                border-radius: 50%;
+                background: radial-gradient(
+                    ellipse at center,
+                    var(--coffee-2),
+                    var(--coffee)
+                );
+            }
+            .cup .handle {
+                position: absolute;
+                right: -16px;
+                top: 34px;
+                width: 26px;
+                height: 34px;
+                border: 3px solid var(--coffee);
+                border-left: none;
+                border-radius: 0 18px 18px 0;
+            }
+            .steam {
+                position: absolute;
+                top: -30px;
+                left: 0;
+                right: 0;
+                height: 40px;
+            }
+            .steam span {
+                position: absolute;
+                bottom: 0;
+                width: 5px;
+                height: 26px;
+                background: linear-gradient(
+                    180deg,
+                    rgba(240, 200, 148, 0.55),
+                    transparent
+                );
+                border-radius: 50%;
+                filter: blur(2px);
+                animation: rise 3.2s ease-in-out infinite;
+            }
+            .steam span:nth-child(1) {
+                left: 36%;
+                animation-delay: 0s;
+            }
+            .steam span:nth-child(2) {
+                left: 50%;
+                animation-delay: 0.7s;
+                height: 32px;
+            }
+            .steam span:nth-child(3) {
+                left: 64%;
+                animation-delay: 1.4s;
+            }
+            @keyframes rise {
+                0% {
+                    transform: translateY(8px) scaleX(1);
+                    opacity: 0;
+                }
+                30% {
+                    opacity: 0.8;
+                }
+                100% {
+                    transform: translateY(-26px) scaleX(2.2);
+                    opacity: 0;
+                }
+            }
 
-  /* ---- HERO ---- */
-  .hero{min-height:100vh; display:grid; place-items:center; text-align:center; position:relative; padding:24px}
-  .cup{position:relative; width:120px; height:96px; margin:0 auto 34px}
-  .cup .body{position:absolute; inset:18px 8px 0 8px; background:linear-gradient(180deg,#1c1410,#120d0a);
-    border:2px solid var(--coffee); border-radius:6px 6px 16px 16px}
-  .cup .body::after{content:""; position:absolute; inset:6px 6px auto 6px; height:10px; border-radius:50%;
-    background:radial-gradient(ellipse at center,var(--coffee-2),var(--coffee))}
-  .cup .handle{position:absolute; right:-16px; top:34px; width:26px; height:34px; border:3px solid var(--coffee);
-    border-left:none; border-radius:0 18px 18px 0}
-  .steam{position:absolute; top:-30px; left:0; right:0; height:40px}
-  .steam span{position:absolute; bottom:0; width:5px; height:26px; background:linear-gradient(180deg,rgba(240,200,148,.55),transparent);
-    border-radius:50%; filter:blur(2px); animation:rise 3.2s ease-in-out infinite}
-  .steam span:nth-child(1){left:36%; animation-delay:0s}
-  .steam span:nth-child(2){left:50%; animation-delay:.7s; height:32px}
-  .steam span:nth-child(3){left:64%; animation-delay:1.4s}
-  @keyframes rise{0%{transform:translateY(8px) scaleX(1); opacity:0}
-    30%{opacity:.8}100%{transform:translateY(-26px) scaleX(2.2); opacity:0}}
+            .hero h1 {
+                font-size: clamp(58px, 16vw, 150px);
+                letter-spacing: -0.02em;
+                line-height: 0.92;
+                font-weight: 600;
+            }
+            .hero h1 .accent {
+                background: linear-gradient(
+                    180deg,
+                    var(--crema),
+                    var(--coffee)
+                );
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+            }
+            .hero p {
+                margin-top: 18px;
+                color: var(--muted);
+                font-family: var(--mono);
+                font-size: 14px;
+                letter-spacing: 1px;
+            }
+            .scrollcue {
+                position: absolute;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                color: var(--muted);
+                font-family: var(--mono);
+                font-size: 11px;
+                letter-spacing: 2px;
+                animation: bob 2s ease-in-out infinite;
+            }
+            @keyframes bob {
+                0%,
+                100% {
+                    transform: translate(-50%, 0);
+                    opacity: 0.5;
+                }
+                50% {
+                    transform: translate(-50%, 8px);
+                    opacity: 1;
+                }
+            }
 
-  .hero h1{font-size:clamp(58px,16vw,150px); letter-spacing:-.02em; line-height:.92; font-weight:600}
-  .hero h1 .accent{background:linear-gradient(180deg,var(--crema),var(--coffee)); -webkit-background-clip:text; background-clip:text; color:transparent}
-  .hero p{margin-top:18px; color:var(--muted); font-family:var(--mono); font-size:14px; letter-spacing:1px}
-  .scrollcue{position:absolute; bottom:30px; left:50%; transform:translateX(-50%); color:var(--muted);
-    font-family:var(--mono); font-size:11px; letter-spacing:2px; animation:bob 2s ease-in-out infinite}
-  @keyframes bob{0%,100%{transform:translate(-50%,0); opacity:.5}50%{transform:translate(-50%,8px); opacity:1}}
+            /* ---- TIMELINE ---- */
+            .timeline {
+                max-width: 760px;
+                margin: 0 auto;
+                padding: 40px 24px 140px;
+                position: relative;
+            }
+            .timeline::before {
+                content: "";
+                position: absolute;
+                left: var(--spine-left, 57px);
+                top: var(--spine-top, 0);
+                height: var(--spine-h, 100%);
+                width: 4px;
+                border-radius: 2px;
+                background: rgba(224, 168, 107, 0.6);
+            }
+            /* the drawn/filled portion follows scroll via JS */
+            .fill {
+                position: absolute;
+                left: var(--spine-left, 57px);
+                top: var(--spine-top, 0);
+                width: 4px;
+                height: 0;
+                border-radius: 2px;
+                background: linear-gradient(
+                    180deg,
+                    var(--coffee),
+                    var(--crema)
+                );
+                box-shadow: 0 0 12px rgba(224, 168, 107, 0.8);
+                z-index: 1;
+            }
 
-  /* ---- TIMELINE ---- */
-  .timeline{max-width:760px; margin:0 auto; padding:40px 24px 140px; position:relative}
-  .timeline::before{content:""; position:absolute; left:var(--spine-left,57px); top:var(--spine-top,0); height:var(--spine-h,100%);
-    width:4px; border-radius:2px; background:rgba(224,168,107,.6)}
-  /* the drawn/filled portion follows scroll via JS */
-  .fill{position:absolute; left:var(--spine-left,57px); top:var(--spine-top,0); width:4px; height:0; border-radius:2px;
-    background:linear-gradient(180deg,var(--coffee),var(--crema)); box-shadow:0 0 12px rgba(224,168,107,.8); z-index:1}
+            .era {
+                position: relative;
+                padding: 34px 0 34px 78px;
+                opacity: 0;
+                transform: translateY(40px);
+                transition:
+                    opacity 0.8s ease,
+                    transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+            }
+            .era.in {
+                opacity: 1;
+                transform: none;
+            }
+            .era .dot {
+                position: absolute;
+                left: 27px;
+                top: 44px;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: var(--coffee-2);
+                z-index: 2;
+                transition: 0.5s;
+            }
+            .era.in .dot {
+                background: var(--crema);
+                box-shadow:
+                    0 0 0 4px rgba(200, 128, 74, 0.2),
+                    0 0 18px rgba(240, 200, 148, 0.85);
+            }
+            .era .year {
+                font-family: var(--mono);
+                font-size: 13px;
+                letter-spacing: 3px;
+                color: var(--coffee-2);
+            }
+            .era h2 {
+                font-size: clamp(26px, 5vw, 40px);
+                margin: 6px 0 12px;
+                letter-spacing: -0.01em;
+                font-weight: 600;
+            }
+            .era p {
+                color: #cdbfae;
+                font-size: 17px;
+            }
+            .era .tag {
+                display: inline-block;
+                margin-top: 14px;
+                font-family: var(--mono);
+                font-size: 12px;
+                letter-spacing: 1px;
+                color: var(--crema);
+                border: 1px solid var(--line);
+                border-radius: 999px;
+                padding: 5px 12px;
+            }
 
-  .era{position:relative; padding:34px 0 34px 78px; opacity:0; transform:translateY(40px);
-    transition:opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1)}
-  .era.in{opacity:1; transform:none}
-  .era .dot{position:absolute; left:27px; top:44px; width:16px; height:16px; border-radius:50%;
-    background:var(--coffee-2); z-index:2; transition:.5s}
-  .era.in .dot{background:var(--crema); box-shadow:0 0 0 4px rgba(200,128,74,.2), 0 0 18px rgba(240,200,148,.85)}
-  .era .year{font-family:var(--mono); font-size:13px; letter-spacing:3px; color:var(--coffee-2)}
-  .era h2{font-size:clamp(26px,5vw,40px); margin:6px 0 12px; letter-spacing:-.01em; font-weight:600}
-  .era p{color:#cdbfae; font-size:17px}
-  .era .tag{display:inline-block; margin-top:14px; font-family:var(--mono); font-size:12px; letter-spacing:1px;
-    color:var(--crema); border:1px solid var(--line); border-radius:999px; padding:5px 12px}
+            /* Duke wave */
+            .duke {
+                font-size: 40px;
+                display: inline-block;
+                transform-origin: 70% 70%;
+            }
+            .era.in .duke {
+                animation: wave 1.4s ease-in-out 0.3s 2;
+            }
+            @keyframes wave {
+                0%,
+                100% {
+                    transform: rotate(0);
+                }
+                25% {
+                    transform: rotate(18deg);
+                }
+                75% {
+                    transform: rotate(-12deg);
+                }
+            }
 
-  /* Duke wave */
-  .duke{font-size:40px; display:inline-block; transform-origin:70% 70%}
-  .era.in .duke{animation:wave 1.4s ease-in-out .3s 2}
-  @keyframes wave{0%,100%{transform:rotate(0)}25%{transform:rotate(18deg)}75%{transform:rotate(-12deg)}}
+            /* Sun -> Oracle morph */
+            .morph {
+                margin-top: 14px;
+                font-family: var(--mono);
+                font-size: 15px;
+                letter-spacing: 1px;
+                color: var(--muted);
+            }
+            .morph b {
+                position: relative;
+                color: var(--ink);
+            }
+            .era.in .morph .from {
+                animation: fade 2.4s ease 0s 1 forwards;
+            }
+            .era.in .morph .to {
+                opacity: 0;
+                animation: fade 2.4s ease 1.2s 1 forwards alternate;
+            }
+            @keyframes fade {
+                from {
+                    opacity: 1;
+                }
+                to {
+                    opacity: 0.25;
+                }
+            }
 
-  /* Sun -> Oracle morph */
-  .morph{margin-top:14px; font-family:var(--mono); font-size:15px; letter-spacing:1px; color:var(--muted)}
-  .morph b{position:relative; color:var(--ink)}
-  .era.in .morph .from{animation:fade 2.4s ease 0s 1 forwards}
-  .era.in .morph .to{opacity:0; animation:fade 2.4s ease 1.2s 1 forwards alternate}
-  @keyframes fade{from{opacity:1}to{opacity:.25}}
+            /* code-ish flourishes */
+            code {
+                font-family: var(--mono);
+                background: rgba(200, 128, 74, 0.12);
+                color: var(--crema);
+                padding: 1px 7px;
+                border-radius: 5px;
+                font-size: 0.85em;
+            }
 
-  /* code-ish flourishes */
-  code{font-family:var(--mono); background:rgba(200,128,74,.12); color:var(--crema); padding:1px 7px; border-radius:5px; font-size:.85em}
+            /* ---- OUTRO ---- */
+            .outro {
+                min-height: 90vh;
+                display: grid;
+                grid-template-rows: 1fr auto;
+                place-items: center;
+                text-align: center;
+                padding: 60px 40px 28px;
+                background: #f6efe2;
+                color: #1c1410;
+                position: relative;
+            }
+            /* fade the dark timeline down into the cream finale */
+            .outro::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                height: 220px;
+                pointer-events: none;
+                background: linear-gradient(
+                    180deg,
+                    var(--bg) 0%,
+                    rgba(12, 10, 9, 0.55) 38%,
+                    rgba(246, 239, 226, 0) 100%
+                );
+            }
+            .outro h2 {
+                font-size: clamp(30px, 7vw, 64px);
+                font-weight: 600;
+                letter-spacing: -0.01em;
+                color: #1c1410;
+            }
+            .outro p {
+                color: #7c6a55;
+                font-family: var(--mono);
+                font-size: 13px;
+                letter-spacing: 1px;
+                margin-top: 16px;
+            }
+            .outro .quizcta {
+                display: inline-block;
+                margin-top: 38px;
+                font-family: var(--mono);
+                font-size: 13px;
+                letter-spacing: 1px;
+                color: #fff7ec;
+                background: var(--coffee);
+                border-radius: 999px;
+                padding: 12px 22px;
+                text-decoration: none;
+                transition:
+                    background 0.2s ease,
+                    transform 0.1s ease;
+            }
+            .outro .quizcta:hover {
+                background: #a9683a;
+            }
+            .outro .quizcta:active {
+                transform: scale(0.98);
+            }
+            .outro .legal {
+                margin-top: 34px;
+                font-family: var(--mono);
+                font-size: 11px;
+                letter-spacing: 0.5px;
+                color: #9a8a74;
+            }
 
-  /* ---- OUTRO ---- */
-  .outro{min-height:90vh; display:grid; place-items:center; text-align:center; padding:60px 40px;
-    background:#f6efe2; color:#1c1410; position:relative}
-  /* fade the dark timeline down into the cream finale */
-  .outro::before{content:""; position:absolute; left:0; right:0; top:0; height:220px; pointer-events:none;
-    background:linear-gradient(180deg, var(--bg) 0%, rgba(12,10,9,.55) 38%, rgba(246,239,226,0) 100%)}
-  .outro h2{font-size:clamp(30px,7vw,64px); font-weight:600; letter-spacing:-.01em; color:#1c1410}
-  .outro p{color:#7c6a55; font-family:var(--mono); font-size:13px; letter-spacing:1px; margin-top:16px}
-  .outro .mark{margin-top:40px; font-family:var(--mono); color:var(--coffee); letter-spacing:3px; font-size:13px}
+            /* Duke, standing watch on the light panel — click him to wave */
+            .duke-svg {
+                width: 120px;
+                height: auto;
+                display: block;
+                margin: 0 auto 30px;
+                cursor: pointer;
+                transform-origin: 50% 92%;
+                filter: drop-shadow(0 12px 26px rgba(28, 20, 16, 0.22));
+            }
+            .duke-svg.wave {
+                animation: dukewave 1.3s ease-in-out;
+            }
+            @keyframes dukewave {
+                0% {
+                    transform: rotate(0);
+                }
+                15% {
+                    transform: rotate(12deg);
+                }
+                30% {
+                    transform: rotate(-6deg);
+                }
+                45% {
+                    transform: rotate(10deg);
+                }
+                60% {
+                    transform: rotate(-4deg);
+                }
+                75% {
+                    transform: rotate(6deg);
+                }
+                100% {
+                    transform: rotate(0);
+                }
+            }
 
-  /* Duke, standing watch on the light panel — click him to wave */
-  .duke-svg{width:120px; height:auto; display:block; margin:0 auto 30px; cursor:pointer;
-    transform-origin:50% 92%; filter:drop-shadow(0 12px 26px rgba(28,20,16,.22))}
-  .duke-svg.wave{animation:dukewave 1.3s ease-in-out}
-  @keyframes dukewave{0%{transform:rotate(0)} 15%{transform:rotate(12deg)} 30%{transform:rotate(-6deg)}
-    45%{transform:rotate(10deg)} 60%{transform:rotate(-4deg)} 75%{transform:rotate(6deg)} 100%{transform:rotate(0)}}
+            /* typewriter caret on the code tags */
+            .tag.typing::after {
+                content: "▋";
+                margin-left: 2px;
+                color: var(--coffee-2);
+                animation: caret 1s step-end infinite;
+            }
+            @keyframes caret {
+                50% {
+                    opacity: 0;
+                }
+            }
 
-  /* typewriter caret on the code tags */
-  .tag.typing::after{content:"▋"; margin-left:2px; color:var(--coffee-2); animation:caret 1s step-end infinite}
-  @keyframes caret{50%{opacity:0}}
+            /* ---- BY THE NUMBERS ---- */
+            .stats {
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 10px 24px 130px;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 38px 24px;
+                text-align: center;
+            }
+            .stats .lead {
+                grid-column: 1/-1;
+                font-family: var(--mono);
+                font-size: 12px;
+                letter-spacing: 4px;
+                text-transform: uppercase;
+                color: var(--coffee-2);
+                margin-bottom: 4px;
+            }
+            .stat .num {
+                font-family: var(--serif);
+                font-weight: 600;
+                line-height: 1;
+                font-size: clamp(42px, 8vw, 74px);
+                background: linear-gradient(
+                    180deg,
+                    var(--crema),
+                    var(--coffee)
+                );
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+            }
+            .stat .lbl {
+                margin-top: 10px;
+                font-family: var(--mono);
+                font-size: 12px;
+                letter-spacing: 1px;
+                color: var(--muted);
+            }
+            @media (max-width: 640px) {
+                .stats {
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 30px 16px;
+                }
+            }
 
-  /* ---- BY THE NUMBERS ---- */
-  .stats{max-width:900px; margin:0 auto; padding:10px 24px 130px;
-    display:grid; grid-template-columns:repeat(4,1fr); gap:38px 24px; text-align:center}
-  .stats .lead{grid-column:1/-1; font-family:var(--mono); font-size:12px; letter-spacing:4px;
-    text-transform:uppercase; color:var(--coffee-2); margin-bottom:4px}
-  .stat .num{font-family:var(--serif); font-weight:600; line-height:1; font-size:clamp(42px,8vw,74px);
-    background:linear-gradient(180deg,var(--crema),var(--coffee)); -webkit-background-clip:text; background-clip:text; color:transparent}
-  .stat .lbl{margin-top:10px; font-family:var(--mono); font-size:12px; letter-spacing:1px; color:var(--muted)}
-  @media (max-width:640px){.stats{grid-template-columns:repeat(2,1fr); gap:30px 16px}}
+            /* easter egg: a puff of steam when the hero cup is clicked */
+            .cup {
+                cursor: pointer;
+            }
+            .puff {
+                position: absolute;
+                bottom: 0;
+                width: 6px;
+                height: 28px;
+                border-radius: 50%;
+                background: linear-gradient(
+                    180deg,
+                    rgba(240, 200, 148, 0.75),
+                    transparent
+                );
+                filter: blur(2px);
+                animation: puffrise 1s ease-out forwards;
+            }
+            @keyframes puffrise {
+                0% {
+                    transform: translateY(8px) scaleX(1);
+                    opacity: 0;
+                }
+                20% {
+                    opacity: 0.9;
+                }
+                100% {
+                    transform: translateY(-64px) scaleX(2.6);
+                    opacity: 0;
+                }
+            }
 
-  /* easter egg: a puff of steam when the hero cup is clicked */
-  .cup{cursor:pointer}
-  .puff{position:absolute; bottom:0; width:6px; height:28px; border-radius:50%;
-    background:linear-gradient(180deg,rgba(240,200,148,.75),transparent); filter:blur(2px);
-    animation:puffrise 1s ease-out forwards}
-  @keyframes puffrise{0%{transform:translateY(8px) scaleX(1); opacity:0}
-    20%{opacity:.9}100%{transform:translateY(-64px) scaleX(2.6); opacity:0}}
+            /* back-to-top button */
+            .totop {
+                position: fixed;
+                right: 22px;
+                bottom: 22px;
+                z-index: 60;
+                width: 46px;
+                height: 46px;
+                border-radius: 50%;
+                display: grid;
+                place-items: center;
+                cursor: pointer;
+                color: var(--crema);
+                background: rgba(28, 20, 16, 0.72);
+                border: 1px solid var(--line);
+                -webkit-backdrop-filter: blur(6px);
+                backdrop-filter: blur(6px);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+                opacity: 0;
+                transform: translateY(10px);
+                pointer-events: none;
+                transition:
+                    opacity 0.35s ease,
+                    transform 0.35s ease,
+                    background 0.3s ease,
+                    border-color 0.3s ease,
+                    color 0.3s ease;
+            }
+            .totop.show {
+                opacity: 1;
+                transform: none;
+                pointer-events: auto;
+            }
+            .totop:hover {
+                background: var(--coffee);
+                border-color: var(--coffee);
+                color: #1c1410;
+            }
+            .totop svg {
+                display: block;
+            }
 
-  /* back-to-top button */
-  .totop{position:fixed; right:22px; bottom:22px; z-index:60; width:46px; height:46px; border-radius:50%;
-    display:grid; place-items:center; cursor:pointer; color:var(--crema);
-    background:rgba(28,20,16,.72); border:1px solid var(--line); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
-    box-shadow:0 6px 20px rgba(0,0,0,.35); opacity:0; transform:translateY(10px); pointer-events:none;
-    transition:opacity .35s ease, transform .35s ease, background .3s ease, border-color .3s ease, color .3s ease}
-  .totop.show{opacity:1; transform:none; pointer-events:auto}
-  .totop:hover{background:var(--coffee); border-color:var(--coffee); color:#1c1410}
-  .totop svg{display:block}
+            /* ---- intro: brew the cup, then bring the title in ---- */
+            .cup .body {
+                overflow: hidden;
+            }
+            .cup .body::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 90%;
+                background: linear-gradient(180deg, var(--coffee-2), #6b3f22);
+                animation: brew 1.15s cubic-bezier(0.3, 0.8, 0.25, 1) 0.3s
+                    backwards;
+            }
+            @keyframes brew {
+                from {
+                    height: 0;
+                }
+            }
+            .hero h1 {
+                animation: heroIn 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s
+                    backwards;
+            }
+            .hero p {
+                animation: heroIn 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.8s
+                    backwards;
+            }
+            @keyframes heroIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(18px);
+                }
+                to {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+            .steam {
+                animation: steamIn 1s ease 1.15s backwards;
+            }
+            @keyframes steamIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
 
-  @media (prefers-reduced-motion: reduce){
-    *{animation:none!important}
-    .era{opacity:1; transform:none}
-  }
-</style>
-</head>
-<body>
-<div class="progress" id="progress"></div>
+            /* ---- Hello World, evolving across versions ---- */
+            .evolve {
+                max-width: 760px;
+                margin: 0 auto;
+                padding: 30px 24px 90px;
+            }
+            .evolve-lead {
+                font-family: var(--mono);
+                font-size: 12px;
+                letter-spacing: 4px;
+                text-transform: uppercase;
+                color: var(--coffee-2);
+                text-align: center;
+                margin-bottom: 22px;
+            }
+            .evolve-tabs {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                justify-content: center;
+                margin-bottom: 18px;
+            }
+            .etab {
+                font-family: var(--mono);
+                font-size: 12px;
+                letter-spacing: 0.5px;
+                color: var(--muted);
+                cursor: pointer;
+                background: transparent;
+                border: 1px solid var(--line);
+                border-radius: 999px;
+                padding: 6px 14px;
+                transition: 0.25s;
+            }
+            .etab:hover {
+                color: var(--crema);
+            }
+            .etab.active {
+                color: #1c1410;
+                background: var(--crema);
+                border-color: var(--crema);
+            }
+            .evolve-code {
+                background: #120d0a;
+                border: 1px solid var(--line);
+                border-radius: 14px;
+                padding: 22px 24px;
+                overflow-x: auto;
+                box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
+            }
+            .evolve-code code {
+                font-family: var(--mono);
+                font-size: 14px;
+                line-height: 1.7;
+                color: #e9dcc8;
+                white-space: pre;
+                background: none;
+                padding: 0;
+                display: block;
+                min-height: 7.5em;
+            }
+            .evolve-code code.typing::after {
+                content: "▋";
+                color: var(--coffee-2);
+                animation: caret 1s step-end infinite;
+            }
+            @media (max-width: 560px) {
+                .evolve-code code {
+                    font-size: 12.5px;
+                }
+            }
 
-<!-- HERO -->
-<header class="hero">
-  <div>
-    <div class="cup">
-      <div class="steam"><span></span><span></span><span></span></div>
-      <div class="body"></div>
-      <div class="handle"></div>
-    </div>
-    <h1>The <span class="accent">Java</span><br>Story</h1>
-    <p>three decades of "write once, run anywhere" ☕</p>
-  </div>
-  <div class="scrollcue">SCROLL ↓</div>
-</header>
+            /* ---- decaf mode (konami) + toast ---- */
+            .hero,
+            .timeline,
+            .evolve,
+            .stats,
+            .outro {
+                transition: filter 0.7s ease;
+            }
+            body.decaf .hero,
+            body.decaf .timeline,
+            body.decaf .evolve,
+            body.decaf .stats,
+            body.decaf .outro {
+                filter: sepia(0.6) brightness(1.04) contrast(0.94)
+                    saturate(0.85);
+            }
+            .toast {
+                position: fixed;
+                left: 50%;
+                bottom: 26px;
+                transform: translate(-50%, 14px);
+                z-index: 80;
+                background: rgba(28, 20, 16, 0.92);
+                color: var(--crema);
+                border: 1px solid var(--line);
+                font-family: var(--mono);
+                font-size: 13px;
+                letter-spacing: 0.5px;
+                padding: 10px 18px;
+                border-radius: 999px;
+                -webkit-backdrop-filter: blur(6px);
+                backdrop-filter: blur(6px);
+                box-shadow: 0 8px 26px rgba(0, 0, 0, 0.4);
+                opacity: 0;
+                pointer-events: none;
+                transition:
+                    opacity 0.3s ease,
+                    transform 0.3s ease;
+            }
+            .toast.show {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
 
-<!-- TIMELINE -->
-<main class="timeline">
-  <div class="fill" id="fill"></div>
+            @media (prefers-reduced-motion: reduce) {
+                * {
+                    animation: none !important;
+                }
+                .era {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- HERO -->
+        <header class="hero">
+            <div>
+                <div class="cup">
+                    <div class="steam">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="body"></div>
+                    <div class="handle"></div>
+                </div>
+                <h1>The <span class="accent">Java</span><br />Story</h1>
+                <p>three decades of "write once, run anywhere" ☕</p>
+            </div>
+            <div class="scrollcue">SCROLL ↓</div>
+        </header>
 
-  <section class="era">
-    <span class="dot"></span>
-    <div class="year">1991</div>
-    <h2>The Green Project &amp; "Oak"</h2>
-    <p>At Sun Microsystems, a small team led by <b>James Gosling</b> set out to build software for interactive TV and smart consumer devices. Gosling named the new language <b>Oak</b> — after the tree outside his office window.</p>
-    <span class="tag">// it was never about the web (yet)</span>
-  </section>
+        <!-- TIMELINE -->
+        <main class="timeline">
+            <div class="fill" id="fill"></div>
 
-  <section class="era">
-    <span class="dot"></span>
-    <div class="year">1995</div>
-    <h2>Java is born <span class="duke">👋</span></h2>
-    <p>"Oak" was already trademarked, so the team renamed it <b>Java</b> — after the coffee. Publicly released on <b>May 23, 1995</b>, it shipped with the mascot <b>Duke</b> and a promise that changed everything: compile to bytecode, run on any machine with a JVM.</p>
-    <span class="tag">Write once, run anywhere</span>
-  </section>
+            <section class="era">
+                <span class="dot"></span>
+                <div class="year">1991</div>
+                <h2>The Green Project &amp; "Oak"</h2>
+                <p>
+                    At Sun Microsystems, a small team led by
+                    <b>James Gosling</b> set out to build software for
+                    interactive TV and smart consumer devices. Gosling named the
+                    new language <b>Oak</b> — after the tree outside his office
+                    window.
+                </p>
+                <span class="tag">// it was never about the web (yet)</span>
+            </section>
 
-  <section class="era">
-    <span class="dot"></span>
-    <div class="year">1996</div>
-    <h2>JDK 1.0</h2>
-    <p>The first official <b>Java Development Kit</b> arrived in January 1996. Applets brought Java into the browser, and "100% Pure Java" became the rallying cry of a generation of developers.</p>
-  </section>
+            <section class="era">
+                <span class="dot"></span>
+                <div class="year">1995</div>
+                <h2>Java is born <span class="duke">👋</span></h2>
+                <p>
+                    "Oak" was already trademarked, so the team renamed it
+                    <b>Java</b> — after the coffee. Publicly released on
+                    <b>May 23, 1995</b>, it shipped with the mascot
+                    <b>Duke</b> and a promise that changed everything: compile
+                    to bytecode, run on any machine with a JVM.
+                </p>
+                <span class="tag">Write once, run anywhere</span>
+            </section>
 
-  <section class="era">
-    <span class="dot"></span>
-    <div class="year">2004</div>
-    <h2>Java 5 — the language grows up</h2>
-    <p>J2SE 5.0 ("Tiger") was a landmark release: <code>generics</code>, <code>annotations</code>, autoboxing, enums, varargs, and the enhanced <code>for</code> loop. Modern Java really starts here.</p>
-    <span class="tag">for (String s : list)</span>
-  </section>
+            <section class="era">
+                <span class="dot"></span>
+                <div class="year">1996</div>
+                <h2>JDK 1.0</h2>
+                <p>
+                    The first official <b>Java Development Kit</b> arrived in
+                    January 1996. Applets brought Java into the browser, and
+                    "100% Pure Java" became the rallying cry of a generation of
+                    developers.
+                </p>
+            </section>
 
-  <section class="era">
-    <span class="dot"></span>
-    <div class="year">2006–07</div>
-    <h2>Java goes open source</h2>
-    <p>Sun released Java under the GPL, creating <b>OpenJDK</b> — the open reference implementation that nearly every JDK is built on today.</p>
-  </section>
+            <section class="era">
+                <span class="dot"></span>
+                <div class="year">2004</div>
+                <h2>Java 5 — the language grows up</h2>
+                <p>
+                    J2SE 5.0 ("Tiger") was a landmark release:
+                    <code>generics</code>, <code>annotations</code>, autoboxing,
+                    enums, varargs, and the enhanced <code>for</code> loop.
+                    Modern Java really starts here.
+                </p>
+                <span class="tag">for (String s : list)</span>
+            </section>
 
-  <section class="era">
-    <span class="dot"></span>
-    <div class="year">2010</div>
-    <h2>Oracle acquires Sun</h2>
-    <p>Oracle completed its acquisition of Sun Microsystems, becoming the new steward of Java. A nervous moment for the community — but the language kept marching forward.</p>
-    <div class="morph"><b class="from">Sun</b> &nbsp;→&nbsp; <b class="to">Oracle</b></div>
-  </section>
+            <section class="era">
+                <span class="dot"></span>
+                <div class="year">2006–07</div>
+                <h2>Java goes open source</h2>
+                <p>
+                    Sun released Java under the GPL, creating <b>OpenJDK</b> —
+                    the open reference implementation that nearly every JDK is
+                    built on today.
+                </p>
+            </section>
 
-  <section class="era">
-    <span class="dot"></span>
-    <div class="year">2014</div>
-    <h2>Java 8 — the one everyone remembers</h2>
-    <p>Lambdas. The Streams API. <code>Optional</code>. A new date/time API. Java 8 modernized the language overnight and became the most widely deployed release for years.</p>
-    <span class="tag">list.stream().map(x -&gt; x).collect(...)</span>
-  </section>
+            <section class="era">
+                <span class="dot"></span>
+                <div class="year">2010</div>
+                <h2>Oracle acquires Sun</h2>
+                <p>
+                    Oracle completed its acquisition of Sun Microsystems,
+                    becoming the new steward of Java. A nervous moment for the
+                    community — but the language kept marching forward.
+                </p>
+                <div class="morph">
+                    <b class="from">Sun</b> &nbsp;→&nbsp;
+                    <b class="to">Oracle</b>
+                </div>
+            </section>
 
-  <section class="era">
-    <span class="dot"></span>
-    <div class="year">2017</div>
-    <h2>Modules &amp; a new rhythm</h2>
-    <p>Java 9 introduced the <b>module system</b> (Project Jigsaw) — and Oracle switched to a predictable <b>six-month release cadence</b>. From here, new Java ships like clockwork.</p>
-  </section>
+            <section class="era">
+                <span class="dot"></span>
+                <div class="year">2014</div>
+                <h2>Java 8 — the one everyone remembers</h2>
+                <p>
+                    Lambdas. The Streams API. <code>Optional</code>. A new
+                    date/time API. Java 8 modernized the language overnight and
+                    became the most widely deployed release for years.
+                </p>
+                <span class="tag"
+                    >list.stream().map(x -&gt; x).collect(...)</span
+                >
+            </section>
 
-  <section class="era">
-    <span class="dot"></span>
-    <div class="year">2018 · 2021</div>
-    <h2>The LTS era — 11 &amp; 17</h2>
-    <p>Long-Term Support releases became the enterprise backbone. <b>Java 11</b> then <b>Java 17</b> gave teams stable, modern targets — with records, sealed classes, switch expressions and pattern matching arriving along the way.</p>
-  </section>
+            <section class="era">
+                <span class="dot"></span>
+                <div class="year">2017</div>
+                <h2>Modules &amp; a new rhythm</h2>
+                <p>
+                    Java 9 introduced the <b>module system</b> (Project Jigsaw)
+                    — and Oracle switched to a predictable
+                    <b>six-month release cadence</b>. From here, new Java ships
+                    like clockwork.
+                </p>
+            </section>
 
-  <section class="era">
-    <span class="dot"></span>
-    <div class="year">2023</div>
-    <h2>Java 21 — virtual threads</h2>
-    <p>Project Loom landed: <b>virtual threads</b> made massively concurrent code simple and cheap. Arguably the biggest shift to the platform since Java 8.</p>
-    <span class="tag">Thread.ofVirtual().start(...)</span>
-  </section>
+            <section class="era">
+                <span class="dot"></span>
+                <div class="year">2018 · 2021</div>
+                <h2>The LTS era — 11 &amp; 17</h2>
+                <p>
+                    Long-Term Support releases became the enterprise backbone.
+                    <b>Java 11</b> then <b>Java 17</b> gave teams stable, modern
+                    targets — with records, sealed classes, switch expressions
+                    and pattern matching arriving along the way.
+                </p>
+            </section>
 
-  <section class="era">
-    <span class="dot"></span>
-    <div class="year">2025 →</div>
-    <h2>Java 25, 26 and beyond</h2>
-    <p>Java 25 (LTS) landed in 2025 and <b>Java 26</b> followed in March 2026 — the six-month cadence ticking on like clockwork. Three decades in, Java powers banks, Android's lineage, Minecraft, and a staggering share of the backend world. Still evolving, still everywhere — and still brewing. ☕</p>
-    <span class="tag">// the JVM runs the world</span>
-  </section>
-</main>
+            <section class="era">
+                <span class="dot"></span>
+                <div class="year">2023</div>
+                <h2>Java 21 — virtual threads</h2>
+                <p>
+                    Project Loom landed: <b>virtual threads</b> made massively
+                    concurrent code simple and cheap. Arguably the biggest shift
+                    to the platform since Java 8.
+                </p>
+                <span class="tag">Thread.ofVirtual().start(...)</span>
+            </section>
 
-<!-- BY THE NUMBERS -->
-<section class="stats" aria-label="Java by the numbers">
-  <div class="lead">Java, by the numbers</div>
-  <div class="stat"><div class="num" data-to="30" data-suffix="+">0</div><div class="lbl">years &amp; counting</div></div>
-  <div class="stat"><div class="num" data-to="3" data-suffix="B+">0</div><div class="lbl">devices run Java</div></div>
-  <div class="stat"><div class="num" data-to="23" data-suffix="M+">0</div><div class="lbl">developers worldwide</div></div>
-  <div class="stat"><div class="num" data-to="26">0</div><div class="lbl">and still shipping</div></div>
-</section>
+            <section class="era">
+                <span class="dot"></span>
+                <div class="year">2025 →</div>
+                <h2>Java 25, 26 and beyond</h2>
+                <p>
+                    Java 25 (LTS) landed in 2025 and <b>Java 26</b> followed in
+                    March 2026 — the six-month cadence ticking on like
+                    clockwork. Three decades in, Java powers banks, Android's
+                    lineage, Minecraft, and a staggering share of the backend
+                    world. Still evolving, still everywhere — and still brewing.
+                    ☕
+                </p>
+                <span class="tag">// the JVM runs the world</span>
+            </section>
+        </main>
 
-<!-- OUTRO -->
-<footer class="outro" id="outro">
-  <div>
-    <svg class="duke-svg" viewBox="0 0 225.938 407.407" role="img" aria-label="Duke, the Java mascot, waving goodbye" xmlns="http://www.w3.org/2000/svg">
-      <path fill-rule="evenodd" clip-rule="evenodd" d="M48.859,43.518c8.424,17.64,2.736,140.832-7.128,184.032c-9.864,43.272-19.728,98.28-22.032,144.576c-1.008,19.728,2.016,27.504,14.904,27.504c22.752,0,51.624-47.952,87.84-46.872c36.288,1.08,47.808,55.008,64.8,54.648c16.992-0.36,30.672-6.264,30.816-58.752C218.563,191.981,87.235,64.973,48.859,43.518L48.859,43.518L48.859,43.518L48.859,43.518z"/>
-      <path fill-rule="evenodd" clip-rule="evenodd" d="M162.763,168.726c7.992,13.464,28.368,3.096,29.232-12.096c0.864-15.192-1.368-34.344-11.232-35.064c-9.864-0.72-16.92-10.584-26.784-11.304c-9.864-0.72-20.448,9.144-25.056-3.96s12.384-18.648,25.056-20.736c-11.304-11.304-17.928-23.832-22.896-36.864c-4.968-13.032-8.64-24.984,5.256-30.096c13.896-5.112,12.744,21.168,28.656,33.192c-4.68-17.712-6.408-25.056-6.048-35.352s-0.36-18.144,14.256-16.128c14.616,2.016,8.28,32.4,19.656,44.784c3.456-11.736,5.544-26.64,13.896-32.76s27.36-6.264,15.264,18.864c-12.096,25.128,3.528,38.736-0.144,58.536c-3.672,19.8-15.048,16.2-19.944,28.944c-4.896,12.744,2.88,41.76-6.336,54.792c-9.216,13.032-10.872,33.048-4.896,49.032C172.339,205.374,162.763,168.726,162.763,168.726L162.763,168.726L162.763,168.726L162.763,168.726z"/>
-      <path fill-rule="evenodd" clip-rule="evenodd" d="M48.355,185.646c-7.416,50.832-33.192,56.88-34.488,77.976c-1.296,21.096,6.84,23.112,6.336,42.624c-0.504,19.512-17.856,27.432-19.944,38.016s8.928,13.968,15.336,13.968c6.408,0,12.816-28.08,15.408-45.936s-8.496-28.368-8.496-40.608c0-12.24,16.056-34.632,13.104-14.976C48.931,235.686,55.268,208.901,48.355,185.646L48.355,185.646L48.355,185.646L48.355,185.646z"/>
-      <path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M58.292,205.013c-5.616,27.504-40.68,181.08-22.824,183.024c17.856,1.944,43.272-47.52,84.888-47.16c41.688,0.36,58.104,55.44,68.256,55.08c10.152-0.36,16.848,3.6,17.928-58.464c1.08-62.064-36.792-141.336-59.184-176.256C116.971,163.181,84.283,187.518,58.292,205.013L58.292,205.013L58.292,205.013L58.292,205.013z"/>
-      <g>
-        <path fill="none" d="M139.162,172.181c-1.95-18.251-19.12-25.421-35.661-23.168c-13.889,1.893-32.403,13.613-34.107,28.64c-1.921,16.937,11.402,32.522,28.361,33.203c15.03,0.604,31.176-6.668,37.93-20.79C138.415,184.362,139.482,178.488,139.162,172.181"/>
-        <path d="M147.082,171.533c-1.662-17.195-14.407-27.988-30.895-30.627c-15.924-2.549-33.26,4.998-44.408,16.146c-12.538,12.538-13.039,29.978-4.26,44.833c8.661,14.657,27.847,19.501,43.563,15.835C132.588,212.705,148.48,193.896,147.082,171.533"/>
-        <radialGradient id="dukeNose" cx="86.6299" cy="167.0693" r="54.7155" gradientUnits="userSpaceOnUse">
-          <stop offset="0" style="stop-color:#FFFFFF"/>
-          <stop offset="0.0604" style="stop-color:#FBC8B4"/>
-          <stop offset="0.0712" style="stop-color:#FBC3B0"/>
-          <stop offset="0.1829" style="stop-color:#F7978B"/>
-          <stop offset="0.2995" style="stop-color:#F4716B"/>
-          <stop offset="0.4199" style="stop-color:#F15251"/>
-          <stop offset="0.5453" style="stop-color:#EF3A3D"/>
-          <stop offset="0.6778" style="stop-color:#EE292F"/>
-          <stop offset="0.822" style="stop-color:#ED1F27"/>
-          <stop offset="1" style="stop-color:#ED1C24"/>
-        </radialGradient>
-        <path fill="url(#dukeNose)" stroke="#000000" d="M139.162,177.941c-1.493,15.627-13.947,28.182-28.944,31.824c-15.87,3.854-33.393-2.257-39.096-18.576c-2.912-8.332-2.37-16.879,2.637-24.198c4.223-6.171,11.033-11,17.779-14.066c13.924-6.326,33.832-7.029,43.531,7.077C138.744,165.348,139.387,171.641,139.162,177.941"/>
-      </g>
-    </svg>
-    <h2>Still running, everywhere.</h2>
-    <p>built for fun · vanilla HTML / CSS / JS · no frameworks were harmed</p>
-  </div>
-</footer>
+        <!-- HELLO WORLD, EVOLVING -->
+        <section
+            class="evolve"
+            id="evolve"
+            aria-label="Hello World through the years"
+        >
+            <div class="evolve-lead">the same hello, three decades apart</div>
+            <div class="evolve-tabs" id="evolveTabs">
+                <button class="etab" type="button" data-i="0">JDK 1.0</button>
+                <button class="etab" type="button" data-i="1">Java 5</button>
+                <button class="etab" type="button" data-i="2">Java 8</button>
+                <button class="etab" type="button" data-i="3">Java 25</button>
+            </div>
+            <pre class="evolve-code"><code id="evolveCode"></code></pre>
+        </section>
 
-<button class="totop" id="toTop" aria-label="Back to top" title="Back to top">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
-       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M12 19V5M6 11l6-6 6 6"/>
-  </svg>
-</button>
+        <!-- BY THE NUMBERS -->
+        <section class="stats" aria-label="Java by the numbers">
+            <div class="lead">Java, by the numbers</div>
+            <div class="stat">
+                <div class="num" data-to="30" data-suffix="+">0</div>
+                <div class="lbl">years &amp; counting</div>
+            </div>
+            <div class="stat">
+                <div class="num" data-to="3" data-suffix="B+">0</div>
+                <div class="lbl">devices run Java</div>
+            </div>
+            <div class="stat">
+                <div class="num" data-to="23" data-suffix="M+">0</div>
+                <div class="lbl">developers worldwide</div>
+            </div>
+            <div class="stat">
+                <div class="num" data-to="26">0</div>
+                <div class="lbl">and still shipping</div>
+            </div>
+        </section>
 
-<script>
-(() => {
-  "use strict";
-  const fill = document.getElementById("fill");
-  const progress = document.getElementById("progress");
-  const timeline = document.querySelector(".timeline");
-  const toTop = document.getElementById("toTop");
+        <!-- OUTRO -->
+        <footer class="outro" id="outro">
+            <div>
+                <svg
+                    class="duke-svg"
+                    viewBox="0 0 225.938 407.407"
+                    role="img"
+                    aria-label="Duke, the Java mascot, waving goodbye"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M48.859,43.518c8.424,17.64,2.736,140.832-7.128,184.032c-9.864,43.272-19.728,98.28-22.032,144.576c-1.008,19.728,2.016,27.504,14.904,27.504c22.752,0,51.624-47.952,87.84-46.872c36.288,1.08,47.808,55.008,64.8,54.648c16.992-0.36,30.672-6.264,30.816-58.752C218.563,191.981,87.235,64.973,48.859,43.518L48.859,43.518L48.859,43.518L48.859,43.518z"
+                    />
+                    <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M162.763,168.726c7.992,13.464,28.368,3.096,29.232-12.096c0.864-15.192-1.368-34.344-11.232-35.064c-9.864-0.72-16.92-10.584-26.784-11.304c-9.864-0.72-20.448,9.144-25.056-3.96s12.384-18.648,25.056-20.736c-11.304-11.304-17.928-23.832-22.896-36.864c-4.968-13.032-8.64-24.984,5.256-30.096c13.896-5.112,12.744,21.168,28.656,33.192c-4.68-17.712-6.408-25.056-6.048-35.352s-0.36-18.144,14.256-16.128c14.616,2.016,8.28,32.4,19.656,44.784c3.456-11.736,5.544-26.64,13.896-32.76s27.36-6.264,15.264,18.864c-12.096,25.128,3.528,38.736-0.144,58.536c-3.672,19.8-15.048,16.2-19.944,28.944c-4.896,12.744,2.88,41.76-6.336,54.792c-9.216,13.032-10.872,33.048-4.896,49.032C172.339,205.374,162.763,168.726,162.763,168.726L162.763,168.726L162.763,168.726L162.763,168.726z"
+                    />
+                    <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M48.355,185.646c-7.416,50.832-33.192,56.88-34.488,77.976c-1.296,21.096,6.84,23.112,6.336,42.624c-0.504,19.512-17.856,27.432-19.944,38.016s8.928,13.968,15.336,13.968c6.408,0,12.816-28.08,15.408-45.936s-8.496-28.368-8.496-40.608c0-12.24,16.056-34.632,13.104-14.976C48.931,235.686,55.268,208.901,48.355,185.646L48.355,185.646L48.355,185.646L48.355,185.646z"
+                    />
+                    <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        fill="#FFFFFF"
+                        d="M58.292,205.013c-5.616,27.504-40.68,181.08-22.824,183.024c17.856,1.944,43.272-47.52,84.888-47.16c41.688,0.36,58.104,55.44,68.256,55.08c10.152-0.36,16.848,3.6,17.928-58.464c1.08-62.064-36.792-141.336-59.184-176.256C116.971,163.181,84.283,187.518,58.292,205.013L58.292,205.013L58.292,205.013L58.292,205.013z"
+                    />
+                    <g>
+                        <path
+                            fill="none"
+                            d="M139.162,172.181c-1.95-18.251-19.12-25.421-35.661-23.168c-13.889,1.893-32.403,13.613-34.107,28.64c-1.921,16.937,11.402,32.522,28.361,33.203c15.03,0.604,31.176-6.668,37.93-20.79C138.415,184.362,139.482,178.488,139.162,172.181"
+                        />
+                        <path
+                            d="M147.082,171.533c-1.662-17.195-14.407-27.988-30.895-30.627c-15.924-2.549-33.26,4.998-44.408,16.146c-12.538,12.538-13.039,29.978-4.26,44.833c8.661,14.657,27.847,19.501,43.563,15.835C132.588,212.705,148.48,193.896,147.082,171.533"
+                        />
+                        <radialGradient
+                            id="dukeNose"
+                            cx="86.6299"
+                            cy="167.0693"
+                            r="54.7155"
+                            gradientUnits="userSpaceOnUse"
+                        >
+                            <stop offset="0" style="stop-color: #ffffff" />
+                            <stop offset="0.0604" style="stop-color: #fbc8b4" />
+                            <stop offset="0.0712" style="stop-color: #fbc3b0" />
+                            <stop offset="0.1829" style="stop-color: #f7978b" />
+                            <stop offset="0.2995" style="stop-color: #f4716b" />
+                            <stop offset="0.4199" style="stop-color: #f15251" />
+                            <stop offset="0.5453" style="stop-color: #ef3a3d" />
+                            <stop offset="0.6778" style="stop-color: #ee292f" />
+                            <stop offset="0.822" style="stop-color: #ed1f27" />
+                            <stop offset="1" style="stop-color: #ed1c24" />
+                        </radialGradient>
+                        <path
+                            fill="url(#dukeNose)"
+                            stroke="#000000"
+                            d="M139.162,177.941c-1.493,15.627-13.947,28.182-28.944,31.824c-15.87,3.854-33.393-2.257-39.096-18.576c-2.912-8.332-2.37-16.879,2.637-24.198c4.223-6.171,11.033-11,17.779-14.066c13.924-6.326,33.832-7.029,43.531,7.077C138.744,165.348,139.387,171.641,139.162,177.941"
+                        />
+                    </g>
+                </svg>
+                <h2>Still running, everywhere.</h2>
+                <p>
+                    built for fun · vanilla HTML / CSS / JS · no frameworks were
+                    harmed
+                </p>
+                <a class="quizcta" href="quiz.html"
+                    >☕ Think you know Java? Take the quiz →</a
+                >
+            </div>
+            <p class="legal">
+                © 2026 · all beans reserved ☕ · void where prohibited
+            </p>
+        </footer>
 
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        <button
+            class="totop"
+            id="toTop"
+            aria-label="Back to top"
+            title="Back to top"
+        >
+            <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="M12 19V5M6 11l6-6 6 6" />
+            </svg>
+        </button>
 
-  // reveal eras on scroll, then typewriter their code tag
-  const io = new IntersectionObserver((entries, obs) => {
-    for (const e of entries) {
-      if (!e.isIntersecting) continue;
-      e.target.classList.add("in");
-      typeTag(e.target.querySelector(".tag"));
-      obs.unobserve(e.target);
-    }
-  }, { threshold: 0.25 });
-  document.querySelectorAll(".era").forEach(el => io.observe(el));
+        <script>
+            (() => {
+                "use strict";
+                const fill = document.getElementById("fill");
+                const timeline = document.querySelector(".timeline");
+                const toTop = document.getElementById("toTop");
 
-  // type a code tag out character by character
-  function typeTag(tag) {
-    if (!tag || tag.dataset.typed) return;
-    tag.dataset.typed = "1";
-    const full = tag.textContent;
-    if (reduce) return;                 // leave the text intact, no animation
-    tag.classList.add("typing");
-    tag.textContent = "";
-    let i = 0;
-    function step() {
-      tag.textContent = full.slice(0, i);
-      if (i++ < full.length) setTimeout(step, 24);
-      else tag.classList.remove("typing");
-    }
-    setTimeout(step, 250);
-  }
+                const reduce = window.matchMedia(
+                    "(prefers-reduced-motion: reduce)",
+                ).matches;
 
-  // count the stats up when they scroll into view
-  const numObs = new IntersectionObserver((entries, obs) => {
-    for (const e of entries) {
-      if (!e.isIntersecting) continue;
-      countUp(e.target);
-      obs.unobserve(e.target);
-    }
-  }, { threshold: 0.6 });
-  document.querySelectorAll(".stat .num").forEach(el => numObs.observe(el));
+                // reveal eras on scroll, then typewriter their code tag
+                const io = new IntersectionObserver(
+                    (entries, obs) => {
+                        for (const e of entries) {
+                            if (!e.isIntersecting) continue;
+                            e.target.classList.add("in");
+                            typeTag(e.target.querySelector(".tag"));
+                            obs.unobserve(e.target);
+                        }
+                    },
+                    { threshold: 0.25 },
+                );
+                document
+                    .querySelectorAll(".era")
+                    .forEach((el) => io.observe(el));
 
-  function countUp(el) {
-    const to = parseFloat(el.dataset.to) || 0;
-    const suffix = el.dataset.suffix || "";
-    if (reduce) { el.textContent = to + suffix; return; }
-    const dur = 1500, t0 = performance.now();
-    function frame(now) {
-      const p = Math.min((now - t0) / dur, 1);
-      const eased = 1 - Math.pow(1 - p, 3);          // easeOutCubic
-      el.textContent = Math.round(to * eased) + suffix;
-      if (p < 1) requestAnimationFrame(frame);
-      else el.textContent = to + suffix;
-    }
-    requestAnimationFrame(frame);
-  }
+                // type a code tag out character by character
+                function typeTag(tag) {
+                    if (!tag || tag.dataset.typed) return;
+                    tag.dataset.typed = "1";
+                    const full = tag.textContent;
+                    if (reduce) return; // leave the text intact, no animation
+                    tag.classList.add("typing");
+                    tag.textContent = "";
+                    let i = 0;
+                    function step() {
+                        tag.textContent = full.slice(0, i);
+                        if (i++ < full.length) setTimeout(step, 24);
+                        else tag.classList.remove("typing");
+                    }
+                    setTimeout(step, 250);
+                }
 
-  // easter egg 1: click the hero cup for a puff of steam
-  const cup = document.querySelector(".cup");
-  const steam = document.querySelector(".steam");
-  if (cup && steam && !reduce) cup.addEventListener("click", () => {
-    for (let k = 0; k < 6; k++) {
-      const p = document.createElement("span");
-      p.className = "puff";
-      p.style.left = (28 + Math.random() * 44) + "%";
-      p.style.animationDelay = (Math.random() * 0.15).toFixed(2) + "s";
-      p.addEventListener("animationend", () => p.remove());
-      steam.appendChild(p);
-    }
-  });
+                // count the stats up when they scroll into view
+                const numObs = new IntersectionObserver(
+                    (entries, obs) => {
+                        for (const e of entries) {
+                            if (!e.isIntersecting) continue;
+                            countUp(e.target);
+                            obs.unobserve(e.target);
+                        }
+                    },
+                    { threshold: 0.6 },
+                );
+                document
+                    .querySelectorAll(".stat .num")
+                    .forEach((el) => numObs.observe(el));
 
-  // easter egg 2: click Duke to make him wave
-  const duke = document.querySelector(".duke-svg");
-  if (duke && !reduce) {
-    duke.addEventListener("click", () => {
-      duke.classList.remove("wave");
-      void duke.offsetWidth;                          // restart the animation
-      duke.classList.add("wave");
-    });
-    duke.addEventListener("animationend", () => duke.classList.remove("wave"));
-  }
+                function countUp(el) {
+                    const to = parseFloat(el.dataset.to) || 0;
+                    const suffix = el.dataset.suffix || "";
+                    if (reduce) {
+                        el.textContent = to + suffix;
+                        return;
+                    }
+                    const dur = 1500,
+                        t0 = performance.now();
+                    function frame(now) {
+                        const p = Math.min((now - t0) / dur, 1);
+                        const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+                        el.textContent = Math.round(to * eased) + suffix;
+                        if (p < 1) requestAnimationFrame(frame);
+                        else el.textContent = to + suffix;
+                    }
+                    requestAnimationFrame(frame);
+                }
 
-  // anchor the spine (and its fill) between the first and last dots
-  const dots = Array.prototype.slice.call(document.querySelectorAll(".era .dot"));
-  let spineTop = 0, spineH = 0;
-  function dotCenter(dot) { return dot.parentElement.offsetTop + dot.offsetTop + dot.offsetHeight / 2; }
-  function layoutSpine() {
-    if (!dots.length) return;
-    spineTop = dotCenter(dots[0]);
-    spineH = dotCenter(dots[dots.length - 1]) - spineTop;
-    // horizontal: line center = dot center; subtract half the 4px line width
-    const d0 = dots[0];
-    const spineLeft = d0.parentElement.offsetLeft + d0.offsetLeft + d0.offsetWidth / 2 - 2;
-    timeline.style.setProperty("--spine-top", spineTop + "px");
-    timeline.style.setProperty("--spine-h", spineH + "px");
-    timeline.style.setProperty("--spine-left", spineLeft + "px");
-  }
+                // easter egg 1: click the hero cup for a puff of steam
+                const cup = document.querySelector(".cup");
+                const steam = document.querySelector(".steam");
+                if (cup && steam && !reduce)
+                    cup.addEventListener("click", () => {
+                        for (let k = 0; k < 6; k++) {
+                            const p = document.createElement("span");
+                            p.className = "puff";
+                            p.style.left = 28 + Math.random() * 44 + "%";
+                            p.style.animationDelay =
+                                (Math.random() * 0.15).toFixed(2) + "s";
+                            p.addEventListener("animationend", () =>
+                                p.remove(),
+                            );
+                            steam.appendChild(p);
+                        }
+                    });
 
-  // progress bar + timeline fill, throttled to animation frames
-  let ticking = false;
-  function update() {
-    ticking = false;
-    const st = window.scrollY || document.documentElement.scrollTop;
-    const docH = document.documentElement.scrollHeight - window.innerHeight;
-    progress.style.width = (docH > 0 ? (st / docH) * 100 : 0) + "%";
+                // easter egg 2: click Duke to make him wave
+                const duke = document.querySelector(".duke-svg");
+                if (duke && !reduce) {
+                    duke.addEventListener("click", () => {
+                        duke.classList.remove("wave");
+                        void duke.offsetWidth; // restart the animation
+                        duke.classList.add("wave");
+                    });
+                    duke.addEventListener("animationend", () =>
+                        duke.classList.remove("wave"),
+                    );
+                }
 
-    // reveal the back-to-top button once we're well down the page
-    if (toTop) toTop.classList.toggle("show", st > 600);
+                // anchor the spine (and its fill) between the first and last dots
+                const dots = Array.prototype.slice.call(
+                    document.querySelectorAll(".era .dot"),
+                );
+                let spineTop = 0,
+                    spineH = 0;
+                function dotCenter(dot) {
+                    return (
+                        dot.parentElement.offsetTop +
+                        dot.offsetTop +
+                        dot.offsetHeight / 2
+                    );
+                }
+                function layoutSpine() {
+                    if (!dots.length) return;
+                    spineTop = dotCenter(dots[0]);
+                    spineH = dotCenter(dots[dots.length - 1]) - spineTop;
+                    // horizontal: line center = dot center; subtract half the 4px line width
+                    const d0 = dots[0];
+                    const spineLeft =
+                        d0.parentElement.offsetLeft +
+                        d0.offsetLeft +
+                        d0.offsetWidth / 2 -
+                        2;
+                    timeline.style.setProperty("--spine-top", spineTop + "px");
+                    timeline.style.setProperty("--spine-h", spineH + "px");
+                    timeline.style.setProperty(
+                        "--spine-left",
+                        spineLeft + "px",
+                    );
+                }
 
-    // fill the spine up to the viewport middle, clamped between first and last dot
-    const tRect = timeline.getBoundingClientRect();
-    const mid = window.innerHeight * 0.5;
-    const filled = Math.min(Math.max(mid - (tRect.top + spineTop), 0), spineH);
-    fill.style.height = filled + "px";
-  }
-  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
-  function onResize() { layoutSpine(); onScroll(); }
+                // timeline fill, throttled to animation frames
+                let ticking = false;
+                function update() {
+                    ticking = false;
+                    const st =
+                        window.scrollY || document.documentElement.scrollTop;
 
-  // back to top
-  if (toTop) toTop.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
-  });
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", onResize);
-  layoutSpine();
-  update();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { layoutSpine(); update(); });
-})();
-</script>
-</body>
+                    // reveal the back-to-top button once we're well down the page
+                    if (toTop) toTop.classList.toggle("show", st > 600);
+
+                    // fill the spine up to the viewport middle, clamped between first and last dot
+                    const tRect = timeline.getBoundingClientRect();
+                    const mid = window.innerHeight * 0.5;
+                    const filled = Math.min(
+                        Math.max(mid - (tRect.top + spineTop), 0),
+                        spineH,
+                    );
+                    fill.style.height = filled + "px";
+                }
+                function onScroll() {
+                    if (!ticking) {
+                        ticking = true;
+                        requestAnimationFrame(update);
+                    }
+                }
+                function onResize() {
+                    layoutSpine();
+                    onScroll();
+                }
+
+                // back to top
+                if (toTop)
+                    toTop.addEventListener("click", () => {
+                        window.scrollTo({
+                            top: 0,
+                            behavior: reduce ? "auto" : "smooth",
+                        });
+                    });
+                window.addEventListener("scroll", onScroll, { passive: true });
+                window.addEventListener("resize", onResize);
+                layoutSpine();
+                update();
+                if (document.fonts && document.fonts.ready)
+                    document.fonts.ready.then(() => {
+                        layoutSpine();
+                        update();
+                    });
+
+                // ---- Hello World, evolving across versions ----
+                const SNIPPETS = [
+                    {
+                        code: 'public class Hello {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}',
+                    },
+                    {
+                        code: 'public class Hello {\n    public static void main(String[] args) {\n        List<String> who = Arrays.asList("World");\n        for (String name : who)\n            System.out.println("Hello, " + name + "!");\n    }\n}',
+                    },
+                    {
+                        code: 'public class Hello {\n    public static void main(String[] args) {\n        Stream.of("World")\n              .map(name -> "Hello, " + name + "!")\n              .forEach(System.out::println);\n    }\n}',
+                    },
+                    {
+                        code: 'void main() {\n    IO.println("Hello, World!");\n}',
+                    },
+                ];
+                const evolveCode = document.getElementById("evolveCode");
+                const evolveTabs = document.getElementById("evolveTabs");
+                let evolveTimer = null,
+                    autoTimer = null,
+                    autoStopped = false;
+
+                function showSnippet(i, typed) {
+                    const snip = SNIPPETS[i];
+                    if (!snip || !evolveCode) return;
+                    evolveTabs
+                        .querySelectorAll(".etab")
+                        .forEach((b, bi) =>
+                            b.classList.toggle("active", bi === i),
+                        );
+                    clearTimeout(evolveTimer);
+                    if (reduce || !typed) {
+                        evolveCode.classList.remove("typing");
+                        evolveCode.textContent = snip.code;
+                        return;
+                    }
+                    evolveCode.classList.add("typing");
+                    evolveCode.textContent = "";
+                    let c = 0;
+                    (function step() {
+                        evolveCode.textContent = snip.code.slice(0, c);
+                        if (c++ < snip.code.length)
+                            evolveTimer = setTimeout(step, 12);
+                        else evolveCode.classList.remove("typing");
+                    })();
+                }
+
+                function autoPlay(i) {
+                    if (autoStopped || i >= SNIPPETS.length) return;
+                    showSnippet(i, true);
+                    const ms = SNIPPETS[i].code.length * 12 + 1400;
+                    autoTimer = setTimeout(() => autoPlay(i + 1), ms);
+                }
+
+                if (evolveCode && evolveTabs) {
+                    showSnippet(0, false); // placeholder before scroll
+                    evolveTabs.addEventListener("click", (e) => {
+                        const b = e.target.closest(".etab");
+                        if (!b) return;
+                        autoStopped = true; // user takes over from autoplay
+                        clearTimeout(autoTimer);
+                        showSnippet(+b.dataset.i, true);
+                    });
+                    const evObs = new IntersectionObserver(
+                        (entries, obs) => {
+                            for (const e of entries) {
+                                if (!e.isIntersecting) continue;
+                                obs.disconnect();
+                                if (reduce)
+                                    showSnippet(SNIPPETS.length - 1, false);
+                                else autoPlay(0);
+                            }
+                        },
+                        { threshold: 0.5 },
+                    );
+                    evObs.observe(document.getElementById("evolve"));
+                }
+
+                // ---- konami code → decaf mode ----
+                const KONAMI = [
+                    "ArrowUp",
+                    "ArrowUp",
+                    "ArrowDown",
+                    "ArrowDown",
+                    "ArrowLeft",
+                    "ArrowRight",
+                    "ArrowLeft",
+                    "ArrowRight",
+                    "b",
+                    "a",
+                ];
+                let kpos = 0,
+                    toastEl = null,
+                    toastTimer = null;
+                function toast(msg) {
+                    if (!toastEl) {
+                        toastEl = document.createElement("div");
+                        toastEl.className = "toast";
+                        document.body.appendChild(toastEl);
+                    }
+                    toastEl.textContent = msg;
+                    toastEl.classList.add("show");
+                    clearTimeout(toastTimer);
+                    toastTimer = setTimeout(
+                        () => toastEl.classList.remove("show"),
+                        2400,
+                    );
+                }
+                window.addEventListener("keydown", (e) => {
+                    const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+                    kpos =
+                        k === KONAMI[kpos] ? kpos + 1 : k === KONAMI[0] ? 1 : 0;
+                    if (kpos === KONAMI.length) {
+                        kpos = 0;
+                        const on = document.body.classList.toggle("decaf");
+                        toast(
+                            on
+                                ? "decaf mode ☕ — easy on the caffeine"
+                                : "back to full strength ☕",
+                        );
+                    }
+                });
+            })();
+        </script>
+    </body>
 </html>
